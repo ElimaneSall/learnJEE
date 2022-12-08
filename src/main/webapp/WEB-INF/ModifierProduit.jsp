@@ -1,14 +1,8 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="repositories.ConnexionBDEcommece" %>
+<%@ page import="java.sql.PreparedStatement" %>
+<%@ page import="java.sql.SQLException" %>
 <%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.PreparedStatement" %><%--
-  Created by IntelliJ IDEA.
-  User: Sall
-  Date: 02/12/2022
-  Time: 11:09
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -16,6 +10,13 @@
 
     <title>Apprendre les servlets de JEE </title>
 </head>
+<%
+    Connection con = ConnexionBDEcommece.getConnection();
+    PreparedStatement ps = con.prepareStatement("select * from produit where idProduit=?");
+        ps.setLong(1, Long.parseLong(request.getParameter("id")));
+    ResultSet rs = ps.executeQuery();
+
+%>
 <header>
     <nav class="navbar navbar-expand-lg bg-primary">
         <div class="container-fluid">
@@ -43,45 +44,25 @@
     </nav>
 </header>
 <body>
-<div class="d-flex justify-content-between">
-    <h1 class="text-primary ">La page des produits</h1>
-    <button class="bg-success text-white border-white"> <a class=" text-white" href="addProduit">Ajouter un produit</a></div></button>
+<form action="insertProduitById" method="POST">
 
+<% while (rs.next()){%>
+        <div class="mb-3 invisible">
+            <label for="id" class="form-label">Id</label>
+            <input type="text" class="form-control" id="id" name="id" value="<%=rs.getString(1)%>">
+        </div>
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom du produit</label>
+            <input type="text" class="form-control" id="nom" name="nom" placeholder="<%=rs.getString(2)%>">
+        </div>
+        <div class="mb-3">
+            <label for="prix" class="form-label">Prix du produit</label>
+            <input type="text" class="form-control" name="prix" id="prix" placeholder="<%=rs.getString(3)%>">
+        </div>
 
-<%
-    Connection con = ConnexionBDEcommece.getConnection();
-    PreparedStatement ps = con.prepareStatement("select * from produit");
-    ResultSet rs = ps.executeQuery();
-%>
-<table class="table col-3">
-    <thead>
-    <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Nom</th>
-        <th scope="col">Prix</th>
-        <th>Supprimer</th>
-        <th>Modifier</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% while (rs.next()){%>
-    <tr>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <%}%>
 
-        <td><%=rs.getLong(1) %></td>
-        <td><%=rs.getString(2)%></td>
-        <td><%=rs.getDouble(3)%></td>
-        <td><a href="supprimer?id=<%= rs.getLong(1) %>">Supprimer</a></td>
-        <td><a href="modifier?id=<%= rs.getLong(1) %>">Modifier</a></td>
-    </tr>
-    <%}%>
-    </tbody>
-</table>
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
-</script>
+</form>
 </body>
 </html>

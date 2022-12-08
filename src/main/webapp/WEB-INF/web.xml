@@ -7,8 +7,16 @@
         <servlet-name>Produit</servlet-name>
         <servlet-class>com.example.serveurwildfly.ProduitServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Insert</servlet-name>
+        <servlet-class>com.example.serveurwildfly.InsertServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Produit</servlet-name>
         <url-pattern>*.php</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Insert</servlet-name>
+        <url-pattern>/InsertDatas</url-pattern>
     </servlet-mapping>
 </web-app>
